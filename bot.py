@@ -7,7 +7,7 @@ load_dotenv()
 intents = discord.Intents.default()
 intents.message_content = True
 
-client = discord.Client(intents=intents)
+client = discord.Client(intents=intents, activity=discord.Game(name="In Production"))
 
 @client.event
 async def on_ready():
