@@ -1,22 +1,22 @@
 import discord
+from discord.ext import commands
 import os
 from dotenv import load_dotenv
 
 load_dotenv()
 
-intents = discord.Intents.default()
-intents.message_content = True
+intents = discord.Intents.all()
 
-client = discord.Client(intents=intents, activity=discord.Game(name="In Production"))
-tree = discord.app_commands.CommandTree(client)
+bot = commands.Bot(command_prefix="b.", intents=intents, activity=discord.Game(name="In Production"))
 
-@client.event
+@bot.event
 async def on_ready():
-    await tree.sync()
-    print(f"We have logged in as {client.user}")
+    print(f"We have logged in as {bot.user}")
 
-@tree.command(name="ping", description="test command")
-async def ping(message):
-    await message.response.send_message("pong")
+    for file in os.listdir("./cogs"):
+        if file.endswith(".py"):
+            await bot.load_extension(f"cogs.{file[:-3]}")
+    
+    await bot.tree.sync()
 
-client.run(os.getenv("discord_token"))
+bot.run(os.getenv("discord_token"))
